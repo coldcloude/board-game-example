@@ -4,7 +4,6 @@ import { Board, BoardRenderer, MARK_BLANK, Pos } from "./BoardGame.js";
 import { GoPlayer } from "./GoBoardGame.js";
 
 import "./go-board.css";
-import { render } from "react-dom";
 
 type GoPos = {
     x:number,
@@ -42,13 +41,13 @@ export default function GoBoard(props:{
     //choose player
     let cp:GoPlayer = props.players[0];
     for(const player of props.players){
-        player.activeEvent.register(()=>cp = player);
+        player.onActive(()=>cp = player);
     }
     //set grids
-    const grids = buildGrids(props.renderer.board)
+    const grids = buildGrids(props.renderer.board);
     //hook status
     const [stones,setStones] = React.useState<GoPos[]>(buildStones(props.renderer.board));
-    props.renderer.drawEvent.register((board)=>{
+    props.renderer.onDraw((board)=>{
         setStones(buildStones(board));
     });
     const selectHandler = (pos:Pos)=>{
