@@ -1,5 +1,5 @@
 import { KHashTable, KMap, KSingletonMap, strcmp, strhash } from "@coldcloude/kai2";
-import {KKDirectRenderer,KKStepBroker, KKCompleteInfoPlayer} from "@coldcloude/kakera";
+import { KKDirectRenderer,KKStepBroker, KKCompleteInfoPlayer } from "@coldcloude/kakera";
 
 export const MARK_BLANK = -1;
 export const MARK_INVALID = -2;

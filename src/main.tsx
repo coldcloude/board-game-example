@@ -15,7 +15,7 @@ const whitePlayer = new GoPlayer(board,1);
 
 const gameBroker = new GoBroker(board,renderer,{name:"black",agent:blackPlayer},{name:"white",agent:whitePlayer});
 
-gameBroker.init();
+const init = gameBroker.init();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -23,4 +23,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   </React.StrictMode>,
 );
 
+await init;
 gameBroker.start();

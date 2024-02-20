@@ -55,11 +55,11 @@ export function goFindBlocks(board:Board):GoBlock[]{
     const rst:GoBlock[] = [];
     const queue:GoBlock[] = [];
     let pending:GoBlock|undefined = undefined;
-    while(singleMap.size()>0||queue.length>0){
+    while(singleMap.size>0||queue.length>0){
         //renew block
         let curr:GoBlock|undefined = queue.shift();
         if(curr===undefined){
-            const $ = singleMap.getLeastNode(true)!;
+            const $ = singleMap.getFirst(true)!;
             curr = $.value;
             pending = curr;
             rst.push(pending!);
@@ -86,7 +86,7 @@ export function goApplyAction(mark:number,action:Pos,board:Board,blocks?:GoBlock
     board.set(action,mark);
     blocks = blocks||goFindBlocks(board);
     for(const block of blocks){
-        if(block.mark!==mark&&block.liberties.size()===0){
+        if(block.mark!==mark&&block.liberties.size===0){
             block.stones.foreach((p)=>{
                 board.set(p,MARK_BLANK);
             });
@@ -97,7 +97,7 @@ export function goApplyAction(mark:number,action:Pos,board:Board,blocks?:GoBlock
 export function goCheckBoard(board:Board,blocks?:GoBlock[]){
     blocks = blocks||goFindBlocks(board);
     for(const block of blocks){
-        if(block.liberties.size()===0){
+        if(block.liberties.size===0){
             return undefined;
         }
     }
@@ -158,8 +158,8 @@ export class GoPlayer extends BoardPlayer<Pos>{
 }
 
 export class GoBroker<G extends GoPlayer,O extends BoardRenderer> extends BoardGameBroker<G,O,Pos> {
-    init(): void {
-        this.renderer.receiveViews([this.board],()=>this.start());
+    async init(){
+        await this.renderer.updateViews([this.board]);
     }
     execute(actionMap: KMap<string, Pos>):boolean {
         const {key:player,value:action} = actionMap.getFirst()!;
