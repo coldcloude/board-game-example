@@ -161,21 +161,22 @@ export class GoBroker<G extends GoPlayer,O extends BoardRenderer> extends BoardG
     async init(){
         await this.renderer.updateViews([this.board]);
     }
-    execute(actionMap: KMap<string, Pos>):boolean {
-        const {key:player,value:action} = actionMap.getFirst()!;
-        if(player===this.playerNames[this.cp]){
-            const newStatus = goCheckAction(this.board,this.cp,action);
-            if(newStatus!==undefined){
-                this.board.status = newStatus;
-                this.cp = 1-this.cp;
-                return true;
+    execute(actionMap: KMap<string, Pos>){
+        actionMap.foreach((player:string,action:Pos)=>{
+            if(player===this.playerNames[this.cp]){
+                const newStatus = goCheckAction(this.board,this.cp,action);
+                if(newStatus!==undefined){
+                    this.board.status = newStatus;
+                    this.cp = 1-this.cp;
+                    return true;
+                }
+                else{
+                    return false;
+                }
             }
             else{
                 return false;
             }
-        }
-        else{
-            return false;
-        }
+        });
     }
 }
