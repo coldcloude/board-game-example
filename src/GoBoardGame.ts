@@ -126,34 +126,41 @@ export type GoBoardState = {
     blocks: GoBlock[]
 };
 
+export function goFindValidActions(board:Board,mark:number):KMap<Pos,GoBoardState>{
+    const actionMap = new KHashTable<Pos,GoBoardState>(poscmp,poshash);
+    for(let x=0; x<board.width; x++){
+        for(let y=0; y<board.height; y++){
+            const action = {x:x,y:y};
+            if(goCheckAction(board,mark,action)){
+                const b = new Board(board.width,board.height,board.status);
+                goApplyAction(mark,action,b);
+                const blocks = goCheckBoard(b);
+                if(blocks!==undefined){
+                    actionMap.set(action,{
+                        status: b.status,
+                        blocks: blocks
+                    });
+                }
+            }
+        }
+    }
+    return actionMap;
+}
+
 export class GoPlayer extends BoardPlayer<Pos>{
     mark:number;
     constructor(board:Board,mark:number){
         super(board);
         this.mark = mark;
     }
-    checkAction(action:Pos):boolean {
-        return goCheckAction(this.board,this.mark,action)!==undefined;
-    }
-    findValidActions():KMap<Pos,GoBoardState>{
-        const actionMap = new KHashTable<Pos,GoBoardState>(poscmp,poshash);
-        for(let x=0; x<this.board.width; x++){
-            for(let y=0; y<this.board.height; y++){
-                const action = {x:x,y:y};
-                if(goCheckAction(this.board,this.mark,action)){
-                    const b = new Board(this.board.width,this.board.height,this.board.status);
-                    goApplyAction(this.mark,action,b);
-                    const blocks = goCheckBoard(b);
-                    if(blocks!==undefined){
-                        actionMap.set(action,{
-                            status: b.status,
-                            blocks: blocks
-                        });
-                    }
-                }
-            }
+    trySelectAction(action:Pos):boolean{
+        if(goCheckAction(this.board,this.mark,action)){
+            this.responseAction(action);
+            return true;
         }
-        return actionMap;
+        else{
+            return false;
+        }
     }
 }
 

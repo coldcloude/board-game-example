@@ -41,13 +41,15 @@ export default function GoBoard(props:{
     //choose player
     let cp:GoPlayer = props.players[0];
     for(const player of props.players){
-        player.onActive(()=>cp = player);
+        player.onUpdateCommands(async ()=>{
+            cp = player;
+        });
     }
     //set grids
     const grids = buildGrids(props.renderer.board);
     //hook status
     const [stones,setStones] = React.useState<GoPos[]>(buildStones(props.renderer.board));
-    props.renderer.onDraw((board)=>{
+    props.renderer.onDraw(async (board)=>{
         setStones(buildStones(board));
     });
     const selectHandler = (pos:Pos)=>{

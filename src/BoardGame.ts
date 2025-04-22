@@ -1,5 +1,5 @@
 import { KHashTable, KMap, KSingletonMap, strcmp, strhash } from "@coldcloude/kai2";
-import { KKDirectRenderer,KKStepBroker, KKCompleteInfoPlayer } from "@coldcloude/kakera";
+import { KKDirectRenderer,KKStepBroker, KKStepPlayer } from "@coldcloude/kakera";
 
 export const MARK_BLANK = -1;
 export const MARK_INVALID = -2;
@@ -52,7 +52,7 @@ export class Board {
     }
 }
 
-export abstract class BoardPlayer<A> extends KKCompleteInfoPlayer<A> {
+export abstract class BoardPlayer<A> extends KKStepPlayer<void,A> {
     board:Board;
     constructor(board:Board){
         super();
